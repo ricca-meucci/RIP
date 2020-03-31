@@ -13,6 +13,7 @@ switch($requestMethod)
             $class->_id = $_GET["id"];
         }
         echo json_encode($class->get());
+    break;
 
     case 'POST'://Ok
 

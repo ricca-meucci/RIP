@@ -2,34 +2,40 @@
 include_once('./class/Student.php');
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
+$explodedURI = explode("/", $_SERVER['REQUEST_URI']);
+$reqID = is_numeric(end($explodedURI)) ? end($explodedURI) : null;
 
-$Student = new Student();
+$Student = new Studente();
 
 switch($requestMethod)
 {
     case 'GET':
-        if(isset($_GET["id"]))
+        if($reqID != null)
         {
-            $Student->_id = $_GET["id"];
+            $Student->_id = $reqID;
         }
         echo json_encode($Student->get());
-
+    break;
     case 'POST'://Ok
 
-        $Student->_name = $_POST["nome"];
-        $Student->_surname = $_POST["cognome"];
-        $Student->_sidi_code = $_POST["email"];
-        $Student->_tax_code = $_POST["classe"];
+        $inputJSON = file_get_contents('php://input');
+        $input = json_decode($inputJSON, TRUE);
+
+        $Student->_name = $input["name"];
+        $Student->_surname = $input["surname"];
+        $Student->_sidi_code = $input["sidi"];
+        $Student->_tax_code = $input["tax"];
+        $Student->_class = $input["class"];
 
         $data = $Student->insert();
 
-        echo json_encode($_POST);
+        echo json_encode($data);
         break;
 
     case 'DELETE':
-        if(isset($_GET["id"]))
+        if($reqID != null)
         {
-            $Student->_id = $_GET["id"];
+            $Student->_id = $reqID;
         }
         else
         {
@@ -38,77 +44,95 @@ switch($requestMethod)
         $Student->delete();
         break;
     case 'PATCH':
+
+        $inputJSON = file_get_contents('php://input');
+        $input = json_decode($inputJSON, TRUE);
         
-        if(isset($_GET["id"]))
+        if($reqID != null)
         {
-            $Student->_id = $_GET["id"];
+            $Student->_id = $reqID;
         }
         else
         {
             header("HTTP/1.0 400 Bad Request");
         }
 
-        if(isset($_GET["nome"]))
+        if(isset($input["name"]))
         {
-            $Student->_nome = $_GET["nome"];
+            $Student->_name = $input["name"];
         }
-        if(isset($_GET["cognome"]))
+        if(isset($input["surname"]))
         {
-            $Student->_cognome = $_GET["cognome"];
+            $Student->_surname = $input["surname"];
         }
-        if(isset($_GET["sidi_code"]))
+        if(isset($input["sidi"]))
         {
-            $Student->_sidi_code = $_GET["sidi_code"];
+            $Student->_sidi_code = $input["sidi"];
         }
-        if(isset($_GET["tax_code"]))
+        if(isset($input["tax"]))
         {
-            $Student->_tax_code = $_GET["tax_code"];
+            $Student->_tax_code = $input["tax"];
+        }
+        if(isset($input["class"]))
+        {
+            $Student->_class = $input["class"];
         }
 
         $Student->update();
     break;
     case 'PUT':
+
+        $inputJSON = file_get_contents('php://input');
+        $input = json_decode($inputJSON, TRUE);
         
-        if(isset($_GET["id"]))
+        if($reqID != null)
         {
-            $Student->_id = $_GET["id"];
+            $Student->_id = $reqID;
         }
         else
         {
             header("HTTP/1.0 400 Bad Request");
         }
 
-        if(isset($_GET["nome"]))
+        if(isset($input["name"]))
         {
-            $Student->_nome = $_GET["nome"];
+            $Student->_name = $input["name"];
         }
         else
         {
-            $Student->_nome = null;
+            $Student->_name = "";
         }
-        if(isset($_GET["cognome"]))
+        if(isset($input["surname"]))
         {
-            $Student->_cognome = $_GET["cognome"];
-        }
-        else
-        {
-            $Student->_cognome = null;
-        }
-        if(isset($_GET["sidi_code"]))
-        {
-            $Student->_sidi_code = $_GET["sidi_code"];
+            $Student->_surname = $input["surname"];
         }
         else
         {
-            $Student->_sidi_code = null;
+            $Student->_surname = "";
         }
-        if(isset($_GET["tax_code"]))
+        if(isset($input["sidi"]))
         {
-            $Student->_tax_code = $_GET["tax_code"];
+            $Student->_sidi_code = $input["sidi"];
         }
         else
         {
-            $Student->_tax_code = null;
+            $Student->_sidi_code = "";
+        }
+        if(isset($input["tax"]))
+        {
+            $Student->_tax_code = $input["tax"];
+        }
+        else
+        {
+            $Student->_tax_code = "";
+        }
+        if(isset($input["class"]))
+        {
+            $Student->_class = $input["class"];
+        }
+        else
+        {
+            $Student->_class = "";
         }
 
         $Student->update();

@@ -53,7 +53,7 @@ class Classe
 		{
 			try
 			{
-				$sql = 'select * from class';
+				$sql = 'select * from class where id = :id';
 				$stmt = $this->db->prepare($sql);
 				$stmt->execute();
 				$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -70,7 +70,7 @@ class Classe
 		{
 			try
 			{
-				$sql = 'select * from class where id = :id';
+				$sql = 'select * from class order by section';
 				$data = [
 					'id' => $this->_id,
 

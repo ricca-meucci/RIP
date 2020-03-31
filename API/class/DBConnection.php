@@ -3,8 +3,8 @@
 class DBConnection {
     private $_dbHostname ="localhost";
     private $_dbName = "FI_ITIS_MEUCCI";
-    private $_dbUsername = "root";
-    private $_dbPassword = "password";
+    private $_dbUsername = "meucci";
+    private $_dbPassword = "meucci";
     private $_con;
  
     public function __construct()
